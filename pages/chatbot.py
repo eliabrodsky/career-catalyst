@@ -21,19 +21,6 @@ if prompt := st.chat_input():
 
     model = genai.GenerativeModel('gemini-pro')
     
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
-    prompt = """
-        Below is a json array representing a conversation.                            
-        There are two people speaking, assistant, and user.
-        You are assistant, and your response should be the
-        naural next thing the assitant would say:\n
-        """ + json.dumps(st.session_state.messages)
-    raw = model.generate_content(prompt).text
-    print(raw)
-    try:
-        response = json.loads(raw)
-    except:
-        response = {"role":"assistant","content":raw}
+    response = model.generate_content(st.session_state.messages).text
     st.session_state.messages.append(response)
     st.chat_message("assistant").write(response['content'])
